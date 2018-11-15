@@ -1,0 +1,88 @@
+<h4 id="1-使用create-react-app创建项目并初始化"><a href="#1-使用create-react-app创建项目并初始化" class="headerlink" title="1. 使用create-react-app创建项目并初始化"></a>1. 使用create-react-app创建项目并初始化</h4><pre><code>create-react-app message_board
+
+cd message_board
+
+npm start
+
+</code></pre><p>注意创建的项目文件名只能使用小写字母</p>
+<h4 id="2-在原有项目结构中新增文件夹如下"><a href="#2-在原有项目结构中新增文件夹如下" class="headerlink" title="2.在原有项目结构中新增文件夹如下"></a>2.在原有项目结构中新增文件夹如下</br></h4><p>assets (用于放置资源文件 如.img)</br><br>common(常量)</br><br>components (自定义组件库)</br><br>layout (主要页面布局)</br></p>
+<h4 id="3-创建主要模块"><a href="#3-创建主要模块" class="headerlink" title="3. 创建主要模块"></a>3. 创建主要模块</h4><p>在layout文件夹下创建一个页面 Home  </br><br>并在components文件夹下创建两个组件模块 分别为</p>
+<blockquote>
+<p>MessageForm (留言板表单模块) </br><br>MessageList (留言板显示模块)</br></p>
+</blockquote>
+<p>现文件结构如下 <br></p>
+<p><img src="https://i.imgur.com/TzJWj1O.png" alt=""></p>
+<h4 id="4-接下来搭建每个组件的结构，将两个组件合并起来在Home页面中正常显示，主要代码如下"><a href="#4-接下来搭建每个组件的结构，将两个组件合并起来在Home页面中正常显示，主要代码如下" class="headerlink" title="4.接下来搭建每个组件的结构，将两个组件合并起来在Home页面中正常显示，主要代码如下"></a>4.接下来搭建每个组件的结构，将两个组件合并起来在Home页面中正常显示，主要代码如下</h4><pre><code>//留言板表单模块
+// /components/MessageForm/index.js
+import React from &apos;react&apos;
+
+class MessageForm extends React.Component {
+    render() {
+        return (
+            &lt;div&gt; this is MessageForm&lt;/div&gt;
+        )
+    }
+}
+export default  MessageForm
+
+</code></pre><p>上面是MessageForm组件的代码，剩下两个MessageList  MessageAlert写法如上，<br>接着在/layout/Home中引入三个组件</p>
+<pre><code>import React from &apos;react&apos;
+import MessageForm from &apos;../../components/MessageForm&apos;
+import MessageList from &apos;../../components/MessageList&apos;
+
+class Home extends React.Component{
+    render(){
+        return(
+            &lt;div&gt;
+                &lt;MessageForm /&gt;
+                &lt;MessageList /&gt;
+            &lt;/div&gt;
+        )
+    }
+}
+export default Home
+
+</code></pre><p>页面展示如下<br><br><img src="https://i.imgur.com/TZwtyhb.png" alt=""><br>这说明两个组件可以在页面上正常显示，接着我们将分别编写三个组件 实现各自功能</p>
+<h4 id="5-MessageForm-留言板表单模块"><a href="#5-MessageForm-留言板表单模块" class="headerlink" title="5.MessageForm 留言板表单模块"></a>5.MessageForm 留言板表单模块</h4><p>本demo采用蚂蚁金服框架antd来开发，引入方法详见<a href="https://ant.design/docs/react/use-with-create-react-app-cn">https://ant.design/docs/react/use-with-create-react-app-cn</a><br>使用 babel-plugin-import 按需加载组件代码和样式的 babel 插件</p>
+<pre><code>antd npm install
+npm install babel-plugin-import
+npm run eject
+</code></pre><p>修改package.json中的 “babel”: { “presets”: [ “react-app” ], “plugins”: [ [ “import”, { “libraryName”: “antd”, “style”: true } ] ] },  <br><br>配置less less-loader css-modules 详见 <a href="https://www.jianshu.com/p/51ff1c8be301">https://www.jianshu.com/p/51ff1c8be301</a><br><br>之后便可以按需载入所需组件，其中包括标题的input框、留言内容的textarea、提交按钮及重置按钮,使用方法可以详见antd官网，主要代码内容如下</p>
+<pre><code> &lt;div className=&quot;msgFrom&quot;&gt;
+    &lt;Divider orientation=&quot;left&quot;&gt;发表留言&lt;/Divider&gt;
+    &lt;Form layout=&quot;inline&quot; onSubmit={this.handleSubmit} &gt;
+        &lt;FormItem &gt;
+            {getFieldDecorator(&apos;title&apos;, {
+                rules: [{ required: true, message: &apos;请输入标题！&apos; }],
+            })(
+                &lt;Input size=&quot;large&quot; placeholder=&quot;请输入标题&quot; /&gt;
+            )}
+            &lt;/FormItem&gt;
+        &lt;FormItem&gt;
+            {getFieldDecorator(&apos;massage&apos;, {
+                rules: [{ required: true, message: &apos;请输入留言内容！&apos; }],
+            })(
+                &lt;TextArea rows={5} placeholder=&quot;请输入留言内容&quot; /&gt;
+            )}
+        &lt;/FormItem&gt;
+        &lt;FormItem style={{textAlign:&apos;right&apos;}}&gt;
+            &lt;Button type=&quot;primary&quot; className=&quot;submit&quot;  htmlType=&quot;submit&quot;&gt;发表&lt;/Button&gt;
+            &lt;Button type=&quot;primary&quot; htmlType=&quot;reset&quot; onClick={this.resetClick.bind(this)}&gt; 重置&lt;/Button&gt;
+        &lt;/FormItem&gt;
+     &lt;/Form&gt;
+&lt;/div&gt;
+</code></pre><p>页面显示效果为<br><img src="https://i.imgur.com/Dr3YYdL.png" alt=""></p>
+<h4 id="6-MessageList-留言板列表展示模块"><a href="#6-MessageList-留言板列表展示模块" class="headerlink" title="6.MessageList 留言板列表展示模块"></a>6.MessageList 留言板列表展示模块</h4><p>留言板展示模块比较简单，使用列表List组件来显示，主要代码如下：</p>
+<pre><code>&lt;div style={{padding:&apos;30px&apos;}}&gt;
+    &lt;List  itemLayout=&quot;horizontal&quot;  dataSource={data}  renderItem={item =&gt; (
+        &lt;List.Item&gt;
+            &lt;List.Item.Meta
+                avatar={&lt;Avatar src={require(&apos;../../assets/head.png&apos;)} /&gt;}
+                title={item.title}
+                description={item.massage} /&gt;
+        &lt;/List.Item&gt;
+      )}  /&gt;
+&lt;/div&gt;
+
+</code></pre><p>页面显示效果如下：<br><img src="https://i.imgur.com/esCejL8.png" alt=""></p>
+<h4 id="7-其他效果的实现"><a href="#7-其他效果的实现" class="headerlink" title="7.其他效果的实现"></a>7.其他效果的实现</h4><p>本demo的完整实现还不仅如此，其中还涉及到了组件与组件之间的传值、提交留言后滚动到页面最底部、easy-mock的使用，这些效果实现方法将在另外文章中详细说明</p>

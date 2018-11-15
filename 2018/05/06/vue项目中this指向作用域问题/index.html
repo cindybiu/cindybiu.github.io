@@ -1,0 +1,46 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=Edge"><meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"><meta name="format-detection" content="telephone=no"><meta name="format-detection" content="email=no"><meta name="description"><meta name="keywords" content="Hexo, Gruntjs, Nodejs, Reactjs, Vuejs"><title>vue项目中this指向作用域问题 - cindyBlog</title><link rel="stylesheet" href="/css/main_style.min.css"><link rel="icon" href="/favicon.ico"></head><body><input id="navi" type="checkbox"><ul class="main-navication"><li><a href="/"><span>Home</span></a></li><li><a href="https://github.com"><span>Github</span></a></li><li><a href="https://www.v2ex.com/"><span>V2EX</span></a></li></ul><div class="wrapper" id="wrap"><div class="post-header"><label class="navi-button light" for="navi">MENU</label><img class="background" src="http://callfiles.ueibo.com/hexo-theme-laughing/post_background.jpg"><div class="post-title"><h1 class="title">vue项目中this指向作用域问题</h1><ul class="meta"><li><i class="icon icon-author"></i>cindy Liu</li><li><i class="icon icon-clock"></i>1 Minutes</li><li><i class="icon icon-calendar"></i>May 6, 2018</li></ul></div></div><div class="article-content" style="max-width:800px"><p><img src="https://i.imgur.com/XAa9VNR.png" alt=""></p>
+<a id="more"></a>
+<p>在methods中一个方法调用另一个方法</p>
+<pre><code>settime(e){ //验证码倒计时
+   console.log(&apos;this is settime()&apos;)
+},
+getVerify:function(e){ //获取验证码
+  this.settime(e)
+}
+</code></pre><p>但当我们使用ajax请求时会报出以下错误</p>
+<p>this.settime is not a function  </p>
+<p>代码如下：</p>
+<pre><code>settime(e){ //验证码倒计时
+      console.log(&apos;this is settime()&apos;)
+   },
+   getVerify:function(e){ //获取验证码
+       $.get(BACK_END_SERVER + &quot;/sms/verify&quot;, { &quot;phone&quot;:this.form1.phone }, function (data) {
+          this.settime(e)
+       })
+   },
+</code></pre><p>这是因为this作用域指向问题，$get()函数实际是一个闭包，无法通过this来指定函数1<br>那么需要怎么修改呢？<br>我们通过当前对象赋予一个新的对象<br>var _this=this;<br>然后使用_this 来指定函数1就行了<br>完整代码</p>
+<pre><code>settime(e){ //验证码倒计时
+    console.log(&apos;this is settime()&apos;)
+},
+getVerify:function(e){ //获取验证码
+    var _this = this;
+    $.get(BACK_END_SERVER + &quot;/sms/verify&quot;, { &quot;phone&quot;:this.form1.phone }, function (data) {
+       _this.settime(e)
+    })
+},
+</code></pre><p>另外说一下，在es6 ，使用箭头函数是不存在这个问题的<br>例如：<br> setTimeout( () =&gt; {<br>   console.log(this.type + ‘ says ‘ + say)<br>        }, 1000)</p>
+<p><a href="https://cindybiu.github.io/2018/05/30/ES6-%E3%80%81babel%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="（详见上一篇笔记）" target="_blank" rel="noopener">（详见上一篇笔记）</a></p>
+<p>当我们使用箭头函数时，函数体内的this对象，就是定义时所在的对象，而不是使用时所在的对象。<br>并不是因为箭头函数内部有绑定this的机制，实际原因是箭头函数根本没有自己的this，它的this是继承外面的，因此内部的this就是外层代码块的this。</p>
+</div><div class="article-meta" style="max-width:800px"><div class="categories"><i class="icon icon-category"></i><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/转载/">转载</a><span class="category-list-count">1</span></li></ul></div></div><div class="article-comment" style="max-width:800px"><div class="ds-thread" id="ds-thread" data-thread-key="cjoiajtki000j40vx8nmo58y0" data-title="vue项目中this指向作用域问题" data-url="http://yoursite.com/2018/05/06/vue项目中this指向作用域问题/" site-name="ueibo"></div><script>var siteName = document.getElementById('ds-thread').getAttribute('site-name');
+var duoshuoQuery = {short_name: siteName};
+(function() {
+  var ds = document.createElement('script');
+  ds.type = 'text/javascript';ds.async = true;
+  ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+  ds.charset = 'UTF-8';
+  (document.getElementsByTagName('head')[0] 
+  || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();</script></div><ul class="navication"><li class="home"><a href="/"><i class="icon icon-home"></i></a></li><li><a href="/2018/05/30/ES6、babel学习笔记/"><i class="icon icon-arror-left"></i></a></li><li><a href="/2018/04/05/AXENT-System项目笔记/"><i class="icon icon-arror-right"></i></a></li></ul><div class="page-footer"><div class="top"><ul class="social"><li><a href="https://github.com/BoizZ" title="Github" target="_blank"><i class="icon icon-github"></i></a></li><li><a href="https://weibo.com/heqibang" title="Weibo" target="_blank"><i class="icon icon-weibo"></i></a></li><li><a href="https://www.segmentfault.com/u/bon" title="SegmentFault" target="_blank"><i class="icon icon-segmentfault"></i></a></li></ul></div><div class="bottom"><p class="copyright">© 2018 cindyBlog<br><small>POWER BY <a href="https://hexo.io" target="_blank">HEXO</a></small><small>, THEME BY <a href="https://github.com/BoizZ/hexo-theme-laughing" target="_blank">LAUGHING</a></small></p></div></div></div><script>var wrap = document.getElementById('wrap');
+window.onload = function () {
+  wrap.className += ' done';
+}</script></body></html>
