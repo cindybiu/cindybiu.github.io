@@ -926,6 +926,7 @@ body {
   font-size: .9rem;
   color: #7f8c8d;
   line-height: 1.5;
+  width: 100% !important;
   margin: 0;
 }
 .post-list > li .excerpt a, .post-list > li .excerpt * a, .post-list > li .no-title a {
