@@ -1,0 +1,67 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=Edge"><meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"><meta name="format-detection" content="telephone=no"><meta name="format-detection" content="email=no"><meta name="description"><meta name="keywords" content="Hexo, Gruntjs, Nodejs, Reactjs, Vuejs"><title>《react.js小书》读书笔记一 - cindyBlog</title><link rel="stylesheet" href="/css/main_style.min.css"><link rel="icon" href="/favicon.ico"></head><body><input id="navi" type="checkbox"><ul class="main-navication"><li><a href="/"><span>Home</span></a></li><li><a href="https://github.com"><span>Github</span></a></li><li><a href="https://www.v2ex.com/"><span>V2EX</span></a></li></ul><div class="wrapper" id="wrap"><div class="post-header"><label class="navi-button light" for="navi">MENU</label><img class="background" src="http://callfiles.ueibo.com/hexo-theme-laughing/post_background.jpg"><div class="post-title"><h1 class="title">《react.js小书》读书笔记一</h1><ul class="meta"><li><i class="icon icon-author"></i>cindy Liu</li><li><i class="icon icon-clock"></i>6 Minutes</li><li><i class="icon icon-calendar"></i>January 10, 2019</li></ul></div></div><div class="article-content" style="max-width:800px"><p><img src="https://i.imgur.com/FMCCZ3n.jpg" alt=""></p>
+<blockquote>
+<p>《react.js》小书非常基础，适合入门新手，非常好理解，规定自己三天时间内阅读完并确保最基本的知识都掌握了，将一些平时回忽略的注意点做了小笔记和总结</p>
+</blockquote>
+<h5 id="在线阅读：http-huziketang-com-books-react"><a href="#在线阅读：http-huziketang-com-books-react" class="headerlink" title="在线阅读：http://huziketang.com/books/react/"></a>在线阅读：<a href="http://huziketang.com/books/react/" target="_blank" rel="noopener">http://huziketang.com/books/react/</a></h5><h5 id="在线OJ试题：http-scriptoj-mangojuice-top-problemsGroups-593a2e29b3838c385539fa4f"><a href="#在线OJ试题：http-scriptoj-mangojuice-top-problemsGroups-593a2e29b3838c385539fa4f" class="headerlink" title="在线OJ试题：http://scriptoj.mangojuice.top/problemsGroups/593a2e29b3838c385539fa4f"></a>在线OJ试题：<a href="http://scriptoj.mangojuice.top/problemsGroups/593a2e29b3838c385539fa4f" target="_blank" rel="noopener">http://scriptoj.mangojuice.top/problemsGroups/593a2e29b3838c385539fa4f</a></h5><a id="more"></a>
+<h2 id="第一阶段"><a href="#第一阶段" class="headerlink" title="第一阶段"></a>第一阶段</h2><h4 id="探讨了如下几个问题："><a href="#探讨了如下几个问题：" class="headerlink" title="探讨了如下几个问题："></a>探讨了如下几个问题：</h4><ul>
+<li>什么问题导致了我们需要前端页面进行组件化  （为了提高代码复用性）</li>
+<li>前端页面组件化需要解决什么样的问题 （减少DOM操作）</li>
+<li>react.js是怎么解决这些问题的</li>
+</ul>
+<h4 id="优化DOM操作"><a href="#优化DOM操作" class="headerlink" title="优化DOM操作"></a>优化DOM操作</h4><p>解决方案：一旦状态发生改变，就重新调用render方法，构建一个新的DOM（更新state-&gt;更新html结构的字符串-&gt;更新DOM-&gt;更新页面），也就是说，只要调用setState组件就会重新渲染，这就消除了手动的DOM操作。</p>
+<h4 id="jsx原理"><a href="#jsx原理" class="headerlink" title="jsx原理"></a>jsx原理</h4><p> React.createElement会构建一个js对象来描述HTML结构信息，包括标签名、属性、子元素等。<strong>所谓JSX其实就是javascript对象</strong><br>jsx到页面经历了以下过程：<br><img src="https://i.imgur.com/8Bb0BiE.png" alt=""></p>
+<h4 id="事件监听"><a href="#事件监听" class="headerlink" title="事件监听"></a>事件监听</h4><ul>
+<li>react.js不需要手动调用浏览器原生addEventListenner进行事件监听（这里需要补充原生Js事件监听知识点）</li>
+<li>这些on*的事件只能用在普通的html的标签上，而不能用在组件标签上。</li>
+</ul>
+<h4 id="event对象"><a href="#event对象" class="headerlink" title="event对象"></a>event对象</h4><p>react.js不需要考虑不同浏览器兼容性的问题，由类似于w3c标准的event.stopPropagation、event.preventDefault等常用方法。</p>
+<h4 id="关于事件中的this"><a href="#关于事件中的this" class="headerlink" title="关于事件中的this"></a>关于事件中的this</h4><p>一般在某个类的实例方法里面的 this 指的是这个实例本身。但是你在react组件的的方法中把 this 打印出来，你会看到 this 是 null 或者 undefined。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">handleClickOnTitle (e) &#123;</span><br><span class="line">	console.log(this) // =&gt; null or undefined</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这是因为 React.js 调用你所传给它的方法的时候，并不是通过对象方法的方式调用（this.handleClickOnTitle），而是直接通过函数调用 （handleClickOnTitle），所以事件监听函数内并不能通过 this 获取到实例。</p>
+<p>如果你想在事件函数当中使用当前的实例，你需要手动地将实例方法 bind 到当前实例上再传入给 React.js。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">class Title extends Component &#123;</span><br><span class="line"> handleClickOnTitle (e) &#123;</span><br><span class="line">     console.log(this)</span><br><span class="line"> &#125;</span><br><span class="line">	</span><br><span class="line"> render () &#123;</span><br><span class="line">     return (</span><br><span class="line">     &lt;h1 onClick=&#123;this.handleClickOnTitle.bind(this)&#125;&gt;React 小书&lt;/h1&gt;</span><br><span class="line">     )</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="组件的state和setState"><a href="#组件的state和setState" class="headerlink" title="组件的state和setState"></a>组件的state和setState</h4><ul>
+<li>组件可以拥有自己的状态，并且可以改变自身状态</li>
+<li>改变状态的时候不要直接用this.state=xxx,而要使用this.setState方法。</li>
+<li><strong>调用setState的时候并不会马上修改state,而是放到更新队列里面，稍后才更新。</strong></li>
+<li>setState可以接受一个函数作为参数，把上一个setState的结果传入这个参数中。</li>
+</ul>
+<h4 id="props"><a href="#props" class="headerlink" title="props"></a>props</h4><ul>
+<li>props是由父组件属性传到子组件的，可以是字符串、数字、对象、甚至是函数</li>
+<li>默认配置 defaultProps</li>
+</ul>
+<pre><code>static defaultProps = {
+    likedText: &apos;取消&apos;,
+    unlikedText: &apos;点赞&apos;
+}
+
+</code></pre><ul>
+<li>props是不可变的，不可以在组件内部修改props，只能通过父组件主动更新</li>
+</ul>
+<h3 id="state-vs-props"><a href="#state-vs-props" class="headerlink" title="state vs props"></a>state vs props</h3><ul>
+<li>state是让组件控制自己的状态，props是让外部对组建进行配置</li>
+</ul>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><ul>
+<li>组件化可以帮助我们解决前端结构复用性的问题，整个页面可以由不同的组件组合、嵌套组成</li>
+<li>一个组件由自己的显示形态，组件的显示形态可以由由数据状态（state）和配置参数（props）共同决定。</li>
+<li>使用className代替class,使用htmlFot代替for</li>
+<li>条件判断时候在表达式插入里面返回null，那么将什么都不显示，相当于忽略了该表达式的插入</li>
+<li>自定义的组件都必须要用大写字母开头，普通的 HTML 标签都用小写字母开头。</li>
+<li>React.js 的事件监听方法需要手动 bind 到当前实例，这种模式在 React.js 中非常常用。</li>
+<li>规则：尽量少的用state,尽量多的用Props</li>
+<li>使用map等循环渲染列表的时候不要忘记key!!!</li>
+<li>使用react.js的时候，并不需要担心多次进行setState会带来性能问题</li>
+<li>React.js 中的 &#60;input /&#62; 、&#60;textarea /&#62;、&#60;select /&#62; 等元素的 value 值如果是受到 React.js 的控制，那么就是受控组件。</li>
+</ul>
+<h3 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h3><p>第一阶段的实战部分比较简单，实现的功能类似之前我的一个小demo，详情可以见<a href="https://cindybiu.github.io/2018/09/18/react%20+mock.js%20%E5%AE%9E%E7%8E%B0%E7%95%99%E8%A8%80%E5%88%97%E8%A1%A8/" title="react +mock.js 实现留言列表" target="_blank" rel="noopener">（react +mock.js 实现留言列表）</a></p>
+</div><div class="article-meta" style="max-width:800px"><div class="categories"><i class="icon icon-category"></i><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/笔记/">笔记</a><span class="category-list-count">15</span></li></ul></div></div><div class="article-comment" style="max-width:800px"><div class="ds-thread" id="ds-thread" data-thread-key="cjr1ix82z000b8ovx8xeu72o9" data-title="《react.js小书》读书笔记一" data-url="http://yoursite.com/2019/01/10/《react.js小书》读书笔记一/" site-name="ueibo"></div><script>var siteName = document.getElementById('ds-thread').getAttribute('site-name');
+var duoshuoQuery = {short_name: siteName};
+(function() {
+  var ds = document.createElement('script');
+  ds.type = 'text/javascript';ds.async = true;
+  ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+  ds.charset = 'UTF-8';
+  (document.getElementsByTagName('head')[0] 
+  || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();</script></div><ul class="navication"><li class="home"><a href="/"><i class="icon icon-home"></i></a></li><li><a href="/2019/01/11/《react.js小书》读书笔记二/"><i class="icon icon-arror-left"></i></a></li><li><a href="/2018/11/01/ECMAScript 6 入门(阮一峰)笔记/"><i class="icon icon-arror-right"></i></a></li></ul><div class="page-footer"><div class="top"><ul class="social"><li><a href="https://github.com/cindybiu" title="Github" target="_blank"><i class="icon icon-github"></i></a></li><li><a href="https://weibo.com/p/1005052090323133" title="Weibo" target="_blank"><i class="icon icon-weibo"></i></a></li><li><a title="SegmentFault" target="_blank"><i class="icon icon-segmentfault"></i></a></li></ul></div><div class="bottom"><p class="copyright">© 2019 cindyBlog<br><small>POWER BY <a href="https://hexo.io" target="_blank">HEXO</a></small><small>, THEME BY <a href="https://github.com/BoizZ/hexo-theme-laughing" target="_blank">LAUGHING</a></small></p></div></div></div><script>var wrap = document.getElementById('wrap');
+window.onload = function () {
+  wrap.className += ' done';
+}</script></body></html>
